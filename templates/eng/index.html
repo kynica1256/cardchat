@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="blockforchat">
+        <div class="headerforchat">
+            <img src="https://alterozoom.com/images/235772_DHmQpMf4iOKkppEbmUxEgg.jpeg" style="border-radius: 5px;" width="70px" height="70px" class="avatar">
+            <div style="width: 20px"></div>
+            <div class="nameforchat">
+                <h2 style="margin-bottom: -15px;" class="names"></h2>
+                <p>Opertor</p>
+            </div>
+        </div>
+        <div class="blockforcener">
+            <input type="button" class="input1" value="START">
+            <div class="windows8" style="display: none;">
+                <br><br><br><br>
+                <div class="wBall" id="wBall_1">
+                    <div class="wInnerBall"></div>
+                </div>
+                <div class="wBall" id="wBall_2">
+                    <div class="wInnerBall"></div>
+                </div>
+                <div class="wBall" id="wBall_3">
+                    <div class="wInnerBall"></div>
+                </div>
+                <div class="wBall" id="wBall_4">
+                    <div class="wInnerBall"></div>
+                </div>
+                <div class="wBall" id="wBall_5">
+                    <div class="wInnerBall"></div>
+                </div>
+            </div>
+        </div>
+        <div class="blockforfoot">
+            <input type="text" placeholder="Message" style="width: 300px;height:25px;font-size: 15px;border-radius: 5px;border: 1px solid rgb(118, 118, 118);" class="inputmess">
+            <button class="buttonsubmit">Send</button><Br><br>
+            <input type="file" id="fileid" onchange="encodeImageFileAsURLmem(this, color)">
+            <label for="fileid">Senf file</label>
+            <br><br>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var parametr;
+        var color;
+        async function subscribe(param, color){
+            let response = await fetch(window.location.protocol+"//"+window.location.hostname+"/chatproject/telegram/check/index.php");
+                let message = await response.text();
+                if (message == param) {
+                    await new Promise(resolve => setTimeout(resolve, 6000));
+                    await subscribe(param, color);
+                } else {
+                    if (message == "") {
+                        await new Promise(resolve => setTimeout(resolve, 6000));
+                        await subscribe(param, color);
+                    } else {
+                        param = message;
+                        document.querySelector('.blockforcener').innerHTML += "<div class='chat__message'><br><br><div class='chat__message-content' style='background-color:"+color+";'>"+param+"</div> </div>";
+                        await new Promise(resolve => setTimeout(resolve, 6000));
+                        await subscribe(param, color);
+                    }
+                }
+
+        }
+        fetch(window.location.protocol+"//"+window.location.hostname+"/chatproject/datareg/color/index.php").
+                then(resp => {return resp.text()}).then(resBody => {
+                    console.log(resBody)
+                    color = resBody;
+                    document.querySelector('.headerforchat').setAttribute("style", "background-color: "+resBody+";");
+                    document.querySelector('.buttonsubmit').setAttribute("style", "background-color: "+resBody+";");
+                    document.querySelector('label').setAttribute("style", "background-color: "+resBody+";");
+        })
+        fetch(window.location.protocol+"//"+window.location.hostname+"/chatproject/datareg/upload/check/index.php").
+                then(resp => {return resp.text()}).then(resBody => {
+                    console.log(resBody)
+                    document.querySelector('.avatar').setAttribute("src", resBody);
+        })
+        fetch(window.location.protocol+"//"+window.location.hostname+"/chatproject/datareg/checkname/index.php").
+                then(resp => {return resp.text()}).then(resBody => {
+                    console.log(resBody)
+                    document.querySelector('.names').innerText = resBody;
+        })
+        function func() {
+            fetch(window.location.protocol+"//"+window.location.hostname+"/chatproject/datareg/color/index.php").
+                then(resp => {return resp.text()}).then(resBody => {
+                    console.log(resBody)
+                    document.querySelector('.windows8').remove();
+                    document.querySelector('.blockforcener').innerHTML += "<div class='chat__message'><br><br><div class='chat__message-content' style='background-color:"+resBody+";'>Ask the operator a question..</div> </div>";
+                    subscribe(parametr, resBody);
+            })
+        }
+        document.querySelector('.input1').onclick = function(color){
+                fetch(window.location.protocol+"//"+window.location.hostname+"/chatproject/adduser/index.php?addr="+document.referrer).
+                then(resp => {return resp.text()}).then(resBody => {
+                    console.log(resBody)
+                    document.querySelector('.input1').remove();
+                    document.querySelector('.windows8').removeAttribute('style');
+                    setTimeout(func, 5000);
+                })
+        };
+        document.querySelector('.buttonsubmit').onclick = function(){
+            console.log(window.location.protocol+"//"+window.location.hostname+"/chatproject/usermessage/index.php?message="+window.btoa(unescape(encodeURIComponent(document.querySelector('.inputmess').value))))
+            fetch(window.location.protocol+"//"+window.location.hostname+"/chatproject/usermessage/index.php?message="+window.btoa(unescape(encodeURIComponent(document.querySelector('.inputmess').value)))).
+                then(resp => {return resp.text()}).then(resBody => {
+                    console.log(resBody)
+                    document.querySelector('.blockforcener').innerHTML += "<div class='chat__item chat__item--responder'><div class='chat__message'><br><br><div class='chat__message-content' style='background-color:"+color+";'>"+document.querySelector('.inputmess').value+"</div></div></div>";
+            })
+        }
+        function encodeImageFileAsURLmem(element, color) {
+            var file = element.files[0];
+            window.namefile = file.name;
+            var reader = new FileReader();
+            reader.onloadend = function() {
+                window.image = reader.result;
+                $.ajax({
+                    url: window.location.protocol+"//"+window.location.hostname+"/chatproject/datareg/userfiles/index.php",
+                    type: 'POST',
+                    data: {
+                        "data":image,
+                        "namefile":namefile,
+                     },
+                    success: function (response) {
+                        console.log(response)
+                        document.querySelector('.blockforcener').innerHTML += "<div class='chat__item chat__item--responder'><div class='chat__message'><br><br><div class='chat__message-content' style='background-color:"+color+";'><img src='"+response+"' width='100px'></div></div></div>";
+                    },
+                    error: function () {
+                        alert('error');
+                    }
+                });
+            }
+            reader.readAsDataURL(file);
+        }
+    </script>
+    <style type="text/css">
+        ::-webkit-scrollbar { /* chrome based */
+        width: 0px;  /* ширина scrollbar'a */
+        /**background: transparent;   опционально */
+        }
+        body {
+            background-color: transparent;
+        }
+        .input1 {
+            font-size: 20px;
+            background-color: transparent;
+            color: #00CC33;
+            border: 3px solid #00CC33;
+            width: 60%;
+            padding: 5px;
+            cursor: pointer;
+            transform: translate(-50%, -50%);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+        .buttonsubmit1 {
+            width: 415px;
+            height: 30px;
+            border: 1px solid black;
+            background-color: black;
+            color: white;
+            transition: 1s;
+            font-size: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .buttonsubmit {
+            width: 100px;
+            height: 30px;
+            border: 1px solid black;
+            color: white;
+            font-size: 15px;
+            transition: 1s;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .blockforfoot {
+            padding: 10px;
+            width: 100%;
+            height: auto;
+        }
+        .blockforcener {
+            width: 100%;
+            height: 300px;
+            border: none;
+            overflow: scroll;
+        }
+        .nameforchat {
+            color: white;
+        }
+        .headerforchat {
+            display: flex;
+            width: 91%;
+            flex-direction: row;
+            border-top-right-radius: 5px;
+            border-top-left-radius: 5px;
+            height: auto;
+            padding: 20px;
+        }
+        .blockforchat {
+           position: fixed;
+           font-family: 'Space Grotesk', sans-serif;
+           border-radius: 5px;
+           min-width: 100px;
+           max-width: 500px;
+           max-height: 800px;
+           border: none;
+           box-shadow: 0 0 40px 5px rgba(0,0,0,0.3);
+        }
+        .windows8 {
+            position: relative;
+            width: 78px;
+            height:78px;
+            margin:auto;
+        }
+        
+        .windows8 .wBall {
+            position: absolute;
+            width: 74px;
+            height: 74px;
+            opacity: 0;
+            transform: rotate(225deg);
+                -o-transform: rotate(225deg);
+                -ms-transform: rotate(225deg);
+                -webkit-transform: rotate(225deg);
+                -moz-transform: rotate(225deg);
+            animation: orbit 6.96s infinite;
+                -o-animation: orbit 6.96s infinite;
+                -ms-animation: orbit 6.96s infinite;
+                -webkit-animation: orbit 6.96s infinite;
+                -moz-animation: orbit 6.96s infinite;
+        }
+        
+        .windows8 .wBall .wInnerBall{
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgb(0,0,0);
+            left:0px;
+            top:0px;
+            border-radius: 10px;
+        }
+        
+        .windows8 #wBall_1 {
+            animation-delay: 1.52s;
+                -o-animation-delay: 1.52s;
+                -ms-animation-delay: 1.52s;
+                -webkit-animation-delay: 1.52s;
+                -moz-animation-delay: 1.52s;
+        }
+        
+        .windows8 #wBall_2 {
+            animation-delay: 0.3s;
+                -o-animation-delay: 0.3s;
+                -ms-animation-delay: 0.3s;
+                -webkit-animation-delay: 0.3s;
+                -moz-animation-delay: 0.3s;
+        }
+        
+        .windows8 #wBall_3 {
+            animation-delay: 0.61s;
+                -o-animation-delay: 0.61s;
+                -ms-animation-delay: 0.61s;
+                -webkit-animation-delay: 0.61s;
+                -moz-animation-delay: 0.61s;
+        }
+        
+        .windows8 #wBall_4 {
+            animation-delay: 0.91s;
+                -o-animation-delay: 0.91s;
+                -ms-animation-delay: 0.91s;
+                -webkit-animation-delay: 0.91s;
+                -moz-animation-delay: 0.91s;
+        }
+        
+        .windows8 #wBall_5 {
+            animation-delay: 1.22s;
+                -o-animation-delay: 1.22s;
+                -ms-animation-delay: 1.22s;
+                -webkit-animation-delay: 1.22s;
+                -moz-animation-delay: 1.22s;
+        }
+        
+        
+        
+        @keyframes orbit {
+            0% {
+                opacity: 1;
+                z-index:99;
+                transform: rotate(180deg);
+                animation-timing-function: ease-out;
+            }
+        
+            7% {
+                opacity: 1;
+                transform: rotate(300deg);
+                animation-timing-function: linear;
+                origin:0%;
+            }
+        
+            30% {
+                opacity: 1;
+                transform:rotate(410deg);
+                animation-timing-function: ease-in-out;
+                origin:7%;
+            }
+        
+            39% {
+                opacity: 1;
+                transform: rotate(645deg);
+                animation-timing-function: linear;
+                origin:30%;
+            }
+        
+            70% {
+                opacity: 1;
+                transform: rotate(770deg);
+                animation-timing-function: ease-out;
+                origin:39%;
+            }
+        
+            75% {
+                opacity: 1;
+                transform: rotate(900deg);
+                animation-timing-function: ease-out;
+                origin:70%;
+            }
+        
+            76% {
+            opacity: 0;
+                transform:rotate(900deg);
+            }
+        
+            100% {
+            opacity: 0;
+                transform: rotate(900deg);
+            }
+        }
+        
+        @-o-keyframes orbit {
+            0% {
+                opacity: 1;
+                z-index:99;
+                -o-transform: rotate(180deg);
+                -o-animation-timing-function: ease-out;
+            }
+        
+            7% {
+                opacity: 1;
+                -o-transform: rotate(300deg);
+                -o-animation-timing-function: linear;
+                -o-origin:0%;
+            }
+        
+            30% {
+                opacity: 1;
+                -o-transform:rotate(410deg);
+                -o-animation-timing-function: ease-in-out;
+                -o-origin:7%;
+            }
+        
+            39% {
+                opacity: 1;
+                -o-transform: rotate(645deg);
+                -o-animation-timing-function: linear;
+                -o-origin:30%;
+            }
+        
+            70% {
+                opacity: 1;
+                -o-transform: rotate(770deg);
+                -o-animation-timing-function: ease-out;
+                -o-origin:39%;
+            }
+        
+            75% {
+                opacity: 1;
+                -o-transform: rotate(900deg);
+                -o-animation-timing-function: ease-out;
+                -o-origin:70%;
+            }
+        
+            76% {
+            opacity: 0;
+                -o-transform:rotate(900deg);
+            }
+        
+            100% {
+            opacity: 0;
+                -o-transform: rotate(900deg);
+            }
+        }
+        
+        @-ms-keyframes orbit {
+            0% {
+                opacity: 1;
+                z-index:99;
+                -ms-transform: rotate(180deg);
+                -ms-animation-timing-function: ease-out;
+            }
+        
+            7% {
+                opacity: 1;
+                -ms-transform: rotate(300deg);
+                -ms-animation-timing-function: linear;
+                -ms-origin:0%;
+            }
+        
+            30% {
+                opacity: 1;
+                -ms-transform:rotate(410deg);
+                -ms-animation-timing-function: ease-in-out;
+                -ms-origin:7%;
+            }
+        
+            39% {
+                opacity: 1;
+                -ms-transform: rotate(645deg);
+                -ms-animation-timing-function: linear;
+                -ms-origin:30%;
+            }
+        
+            70% {
+                opacity: 1;
+                -ms-transform: rotate(770deg);
+                -ms-animation-timing-function: ease-out;
+                -ms-origin:39%;
+            }
+        
+            75% {
+                opacity: 1;
+                -ms-transform: rotate(900deg);
+                -ms-animation-timing-function: ease-out;
+                -ms-origin:70%;
+            }
+        
+            76% {
+            opacity: 0;
+                -ms-transform:rotate(900deg);
+            }
+        
+            100% {
+            opacity: 0;
+                -ms-transform: rotate(900deg);
+            }
+        }
+        
+        @-webkit-keyframes orbit {
+            0% {
+                opacity: 1;
+                z-index:99;
+                -webkit-transform: rotate(180deg);
+                -webkit-animation-timing-function: ease-out;
+            }
+        
+            7% {
+                opacity: 1;
+                -webkit-transform: rotate(300deg);
+                -webkit-animation-timing-function: linear;
+                -webkit-origin:0%;
+            }
+        
+            30% {
+                opacity: 1;
+                -webkit-transform:rotate(410deg);
+                -webkit-animation-timing-function: ease-in-out;
+                -webkit-origin:7%;
+            }
+        
+            39% {
+                opacity: 1;
+                -webkit-transform: rotate(645deg);
+                -webkit-animation-timing-function: linear;
+                -webkit-origin:30%;
+            }
+        
+            70% {
+                opacity: 1;
+                -webkit-transform: rotate(770deg);
+                -webkit-animation-timing-function: ease-out;
+                -webkit-origin:39%;
+            }
+        
+            75% {
+                opacity: 1;
+                -webkit-transform: rotate(900deg);
+                -webkit-animation-timing-function: ease-out;
+                -webkit-origin:70%;
+            }
+        
+            76% {
+            opacity: 0;
+                -webkit-transform:rotate(900deg);
+            }
+        
+            100% {
+            opacity: 0;
+                -webkit-transform: rotate(900deg);
+            }
+        }
+        
+        @-moz-keyframes orbit {
+            0% {
+                opacity: 1;
+                z-index:99;
+                -moz-transform: rotate(180deg);
+                -moz-animation-timing-function: ease-out;
+            }
+        
+            7% {
+                opacity: 1;
+                -moz-transform: rotate(300deg);
+                -moz-animation-timing-function: linear;
+                -moz-origin:0%;
+            }
+        
+            30% {
+                opacity: 1;
+                -moz-transform:rotate(410deg);
+                -moz-animation-timing-function: ease-in-out;
+                -moz-origin:7%;
+            }
+        
+            39% {
+                opacity: 1;
+                -moz-transform: rotate(645deg);
+                -moz-animation-timing-function: linear;
+                -moz-origin:30%;
+            }
+        
+            70% {
+                opacity: 1;
+                -moz-transform: rotate(770deg);
+                -moz-animation-timing-function: ease-out;
+                -moz-origin:39%;
+            }
+        
+            75% {
+                opacity: 1;
+                -moz-transform: rotate(900deg);
+                -moz-animation-timing-function: ease-out;
+                -moz-origin:70%;
+            }
+        
+            76% {
+            opacity: 0;
+                -moz-transform:rotate(900deg);
+            }
+        
+            100% {
+            opacity: 0;
+                -moz-transform: rotate(900deg);
+            }
+        }
+    </style>
+    <style>
+    .chat__header {
+      text-align: center;
+    }
+    
+    .chat__item {
+      display: flex;
+      align-items: flex-start;
+    }
+    
+    .chat__person-avatar {
+      border-radius: 50%;
+    }
+    
+    .chat__messages {
+      margin-left: 10px;
+    }
+    
+    .chat__message {
+      display: flex;
+      align-items: center;
+      margin-right: 10px;
+    }
+    
+    .chat__message-content {
+      border-radius: 5px;
+      padding: 7px;
+      display: inline-block;
+      color: white;
+      margin-left: 5px;
+    }
+    
+    .chat__item--responder {
+      flex-direction: row-reverse;
+    }
+    
+      .chat__item--responder .chat__message {
+        flex-direction: row-reverse;
+      }
+    
+      .chat__item--responder .chat__message-content {
+        margin-left: 0;
+        margin-right: 5px;
+      }
+    </style>
+    <style type="text/css">
+    #fileid {
+    display:none;
+    }
+    label {
+        width:410px;
+        padding-bottom: 5px;
+        padding-top: 5px;
+        text-align: center;
+        border:1px solid black;
+        border-radius:5px;
+        display:inline-block;
+        cursor:pointer;
+        color: white;
+    }
+    </style>
+</body>
+</html>
