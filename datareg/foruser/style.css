@@ -1,0 +1,14 @@
+* {
+	font-family: 'Noto Sans JP', sans-serif;
+}
+
+.block {
+    width:100%;
+    height: auto;
+    border: 10px solid transparent;
+    box-shadow: 0 0 10px 1px rgba(0,0,0,0.3);
+}
+.input {
+	width: 100%;
+	font-size: 20px;
+}

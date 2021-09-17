@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300&display=swap" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+	<meta charset="utf-8">
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <br>
+                <div class="block">
+                    <br>
+                    <h1>Mysql account</h1>
+                    <hr>
+                    <br>
+                    <p>Mysql host:</p>
+                    <input type="text" placeholder="host" class="input" id="host">
+                    <br>
+                    <p>Mysql login:</p>
+                    <input type="text" placeholder="login" class="input" id="login">
+                    <br>
+                    <p>Mysql password:</p>
+                    <input type="password" placeholder="password" class="input" id="password">
+                    <br>
+                    <p>Mysql database:</p>
+                    <input type="text" placeholder="database" class="input" id="database">
+                </div>
+                <br>
+            </div>
+            <div class="col-sm">
+                <br>
+                <div class="block">
+                    <br>
+                    <h1>Operator account</h1>
+                    <hr>
+                    <br>
+                    <p>Operator name:</p>
+                    <input type="text" placeholder="operator name" class="input" id="name">
+                    <br>
+                    <p>Telegram token:</p>
+                    <input type="text" placeholder="telegram token" class="input" id="token">
+                    <br>
+                    <p>Avatar:</p>
+                    <input type="file" id="file-uploader" onchange="encodeImageFileAsURLmem(this)">
+                    <br>
+                    <p>Id telegram:</p>
+                    <input type="text" placeholder="id" class="input" id="id">
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <center>
+                    <div>
+                        <h3>Change color (default black)</h3><br>
+                        <p>Значение цвета должно быть в HEX ,а не rgb!!</p><br>
+                        <p>The color value should be in HEX, not rgb!!</p>
+                        <input type="color" value="black" id="color">
+                    </div>
+            </center>
+            <br><br>
+            <button type="button" class="btn btn-secondary btn-lg btn-block" style="width: 100%;" id="savebutton">Save</button>
+            <br>
+            <div style="display: none;" id="blocknew">
+                <Br><Br>
+                <br><Br>
+                <h2>Html Code</h2>
+                <br>
+                <h2>Russian version</h2>
+                <textarea style="width: 100%;" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                <br>
+                <h2>English version</h2>
+                <textarea style="width: 100%;" class="form-control" id="exampleFormControlTextarea2" rows="3"></textarea>
+                <br>
+                <br><br>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script type="text/javascript" src="script.js"></script>
+</body>
+</html>
